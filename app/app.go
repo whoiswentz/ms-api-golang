@@ -1,6 +1,8 @@
 package app
 
 import (
+	"banking/domain"
+	"banking/service"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
@@ -9,10 +11,10 @@ import (
 func Start() {
 	router := mux.NewRouter()
 
-	router.HandleFunc("/greet", greet).Methods(http.MethodGet)
-	router.HandleFunc("/customers", getAllCustomer).Methods(http.MethodGet)
-	router.HandleFunc("/customers", createCustomer).Methods(http.MethodPost)
-	router.HandleFunc("/customers/{customer_id:[0-9]+}", getCustomer).Methods(http.MethodGet)
+	customerHandler := CustomerHandler{
+		service: service.NewDefaultCustomerService(domain.NewCustomerRepositoryStub()),
+	}
+	router.HandleFunc("/customers", customerHandler.getAllCustomer).Methods(http.MethodGet)
 
 	log.Fatal(http.ListenAndServe("localhost:8080", router))
 }
