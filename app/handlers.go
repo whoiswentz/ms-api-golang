@@ -31,3 +31,12 @@ func getAllCustomer(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(customers)
 	}
 }
+
+func getCustomer(w http.ResponseWriter, r *http.Request) {
+
+}
+
+func createCustomer(w http.ResponseWriter, r *http.Request) {
+
+}
+
