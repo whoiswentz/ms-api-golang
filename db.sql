@@ -39,11 +39,12 @@ VALUES ('4d75ae30-cb09-4339-95c9-be48e080afb8', '2020-08-22 10:20:06', 'Saving',
        ('a155508b-881f-4a00-aa28-4a861d0d48ee', '2021-01-12 1:12:03', 'Saving', '1077', 1);
 
 DROP TABLE IF EXISTS transactions;
-CREATE TABLE transactions (
-    transaction_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    account_id UUID NOT NULL REFERENCES accounts (account_id),
-    amount DECIMAL NOT NULL,
-    transaction_type STRING NOT NULL,
+CREATE TABLE transactions
+(
+    transaction_id   UUID PRIMARY KEY   DEFAULT gen_random_uuid(),
+    account_id       UUID      NOT NULL REFERENCES accounts (account_id),
+    amount           DECIMAL   NOT NULL,
+    transaction_type STRING    NOT NULL,
     transaction_date TIMESTAMP NOT NULL DEFAULT current_timestamp(),
     INDEX (account_id)
 );

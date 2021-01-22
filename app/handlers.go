@@ -3,30 +3,41 @@ package app
 import (
 	"banking/service"
 	"encoding/json"
-	"encoding/xml"
+	"github.com/gorilla/mux"
 	"net/http"
 )
-
-type Customer struct {
-	Name string `json:"full_name" xml:"name"`
-	City string `json:"city" xml:"city"`
-	ZipCode string `json:"zip_code" xml:"zipcode"`
-}
-
 
 type CustomerHandler struct {
 	service service.CustomerService
 }
 
 func (ch *CustomerHandler) getAllCustomer(w http.ResponseWriter, r *http.Request) {
-	customers, _ := ch.service.GetAllCustomer()
+	status := r.URL.Query().Get("status")
 
-	if r.Header.Get("Content-Type") == "application/xml" {
-		w.Header().Add("Content-Type", "application/xml")
-		xml.NewEncoder(w).Encode(customers)
+	customers, err := ch.service.GetAllCustomer(status)
+	if err != nil {
+		writeResponse(w, err.Code, err.AsMessage())
 	} else {
-		w.Header().Add("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(customers)
+		writeResponse(w, http.StatusOK, customers)
 	}
 }
 
+func (ch *CustomerHandler) getCustomer(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+
+	customerId := vars["customer_id"]
+	customer, err := ch.service.GetCustomer(customerId)
+	if err != nil {
+		writeResponse(w, err.Code, err.AsMessage())
+	} else {
+		writeResponse(w, http.StatusOK, customer)
+	}
+}
+
+func writeResponse(w http.ResponseWriter, code int, data interface{}) {
+	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(code)
+	if err := json.NewEncoder(w).Encode(data); err != nil {
+		panic(err)
+	}
+}
