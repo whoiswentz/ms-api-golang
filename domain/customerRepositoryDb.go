@@ -7,13 +7,35 @@ import (
 )
 
 type CustomerRepositoryDb struct {
+	client *sql.DB
+}
 
+func NewCustomerRepositoryDb() *CustomerRepositoryDb {
+	db, err := sql.Open("postgres", "")
+	if err != nil {
+		panic(err)
+	}
+	return &CustomerRepositoryDb{client: db}
 }
 
 func (d CustomerRepositoryDb) FindAll() ([]Customer, error) {
-	db, err := sql.Open("postgres", "")
+	findAllSQL := "SELECT customer_id, name, city, zipcode, date_of_birth, status FROM customers"
+
+	rows, err := d.client.Query(findAllSQL)
 	if err != nil {
-		log.Fatal("error connection to the database: ", err)
+		log.Println(err)
+		return nil, err
 	}
-	defer db.Close()
+
+	customers := make([]Customer, 0)
+	for rows.Next() {
+		var c Customer
+		if err := rows.Scan(&c.Id, &c.Name, &c.City, &c.ZipCode, &c.DateOfBirth, &c.Status); err != nil {
+			log.Fatalf("Error while scanning customer table: %s", err.Error())
+			return nil, err
+		}
+		customers = append(customers, c)
+	}
+
+	return customers, nil
 }

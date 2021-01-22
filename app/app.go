@@ -12,7 +12,7 @@ func Start() {
 	router := mux.NewRouter()
 
 	customerHandler := CustomerHandler{
-		service: service.NewDefaultCustomerService(domain.NewCustomerRepositoryStub()),
+		service: service.NewDefaultCustomerService(domain.NewCustomerRepositoryDb()),
 	}
 	router.HandleFunc("/customers", customerHandler.getAllCustomer).Methods(http.MethodGet)
 
