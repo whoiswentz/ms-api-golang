@@ -15,7 +15,7 @@ type DefaultCustomerService struct {
 	repository domain.CustomerRepository
 }
 
-func NewDefaultCustomerService(repository domain.CustomerRepository) *DefaultCustomerService {
+func NewCustomerService(repository domain.CustomerRepository) *DefaultCustomerService {
 	return &DefaultCustomerService{repository: repository}
 }
 
