@@ -11,12 +11,8 @@ type CustomerRepositoryDb struct {
 	client *sql.DB
 }
 
-func NewCustomerRepositoryDb() *CustomerRepositoryDb {
-	db, err := sql.Open("postgres", "")
-	if err != nil {
-		panic(err)
-	}
-	return &CustomerRepositoryDb{client: db}
+func NewCustomerRepositoryDb(client *sql.DB) *CustomerRepositoryDb {
+	return &CustomerRepositoryDb{client: client}
 }
 
 func (d CustomerRepositoryDb) FindAll(status string) ([]Customer, *errs.AppError) {

@@ -17,10 +17,16 @@ func init() {
 	if log, err = config.Build(zap.AddCallerSkip(1)); err != nil {
 		panic(err)
 	}
+
+	log.Info("logger initialized")
 }
 
 func Debug(message string, fields ...zap.Field) {
 	log.Debug(message, fields...)
+}
+
+func Panic(message string, fields ...zap.Field) {
+	log.Panic(message, fields...)
 }
 
 func Info(message string, fields ...zap.Field) {
