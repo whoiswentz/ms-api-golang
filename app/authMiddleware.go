@@ -12,7 +12,11 @@ type AuthMiddleware struct {
 	service service.AuthService
 }
 
-func (a AuthMiddleware) authorizationHandler() func (handler http.Handler) http.Handler {
+func NewAuthMiddleware(service service.AuthService) *AuthMiddleware {
+	return &AuthMiddleware{service: service}
+}
+
+func (a AuthMiddleware) AuthorizationHandler() func (handler http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			currentRouter := mux.CurrentRoute(r)
